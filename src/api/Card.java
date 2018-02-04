@@ -7,6 +7,8 @@ package api;
  *
  *   1. Java Enum is a type. In this case, an instance of a card value
  *      should be declared using Card.Value (likewise for suit).
+ *      You could for example instantiate an ace of spades with
+ *      new Card(Card.Value.ACE, Card.Suit.SPADE)
  *
  *   2. The Enum type defines a static method called 'values' that
  *      will allow you to go through all values of that type:
@@ -15,7 +17,7 @@ package api;
  *   3. The number next to each constant (ACE(1), for example)
  *      represents that contants value. That value can be accessed
  *      using Card.getValue: If you have a variable x of type Card
- *      that represents an ACE, x.getValue() will return 1.
+ *      that represents an ACE, x.getValue().getValue() will return 1.
  */
 public class Card implements Comparable<Card> {
     public enum Value {
