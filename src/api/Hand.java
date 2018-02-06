@@ -1,6 +1,6 @@
 package api;
 
-import java.util.Set;
+import java.util.List;
 import java.lang.Comparable;
 
 /*
@@ -15,7 +15,7 @@ public interface Hand extends Comparable<Hand> {
     /*
      * Returns a collection of cards that is read-only.
      */
-    public Set<Card> getCards();
+    public List<Card> getCards();
 
     /*
      * Determination of valid and winning hands, respectively. Your
