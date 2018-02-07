@@ -7,8 +7,6 @@ package api;
  *
  *   1. Java Enum is a type. In this case, an instance of a card value
  *      should be declared using Card.Value (likewise for suit).
- *      You could for example instantiate an ace of spades with
- *      new Card(Card.Value.ACE, Card.Suit.SPADE)
  *
  *   2. The Enum type defines a static method called 'values' that
  *      will allow you to go through all values of that type:
