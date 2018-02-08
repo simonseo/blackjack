@@ -9,6 +9,7 @@ public class BlackJackPlayer implements Player {
 	private int wallet;
 	private String name;
 	private int defaultWager;
+	private boolean playing;
 
 	public BlackJackPlayer() {
 		this.hand = new BlackJackHand();
@@ -80,6 +81,14 @@ public class BlackJackPlayer implements Player {
 	public boolean hasMoney() {
 		return this.getMoney() > 0;
 	}
+	
+	public void play(boolean isPlaying) {
+		this.playing = isPlaying;
+	}
+	
+	public boolean isPlaying() {
+		return this.playing;
+	}
 
 	@Override
 	public String getName() {
@@ -88,18 +97,19 @@ public class BlackJackPlayer implements Player {
 
 	@Override
 	public boolean requestCard() {
+		if (!this.getHand().isValid()) return false;
 		int value = this.getHand().valueOf();
 		switch (value) {
-		case 21:
-		case 20:
-		case 19:
-		case 18:
-			return false;
-		case 17:
-		case 16:
-			return ((BlackJackHand) this.getHand()).hasAce() ? true : false;
-		default:
-			return true;
+			case 21:
+			case 20:
+			case 19:
+			case 18:
+				return false;
+			case 17:
+			case 16:
+				return ((BlackJackHand) this.getHand()).hasAce() ? true : false;
+			default:
+				return true;
 		}
 	}
 

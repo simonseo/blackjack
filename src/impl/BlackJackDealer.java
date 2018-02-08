@@ -43,4 +43,20 @@ public class BlackJackDealer extends BlackJackPlayer implements Dealer {
 	public void shuffle() {
 		Collections.shuffle(deck);
 	}
+	
+	@Override
+	public boolean requestCard() {
+		if (!this.getHand().isValid()) return false;
+		int value = this.getHand().valueOf();
+		switch (value) {
+			case 21:
+			case 20:
+			case 19:
+			case 18:
+			case 17:
+				return false;
+			default:
+				return true;
+		}
+	}
 }
