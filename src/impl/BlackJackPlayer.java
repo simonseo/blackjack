@@ -9,7 +9,8 @@ public class BlackJackPlayer implements Player {
 	private int wallet;
 	private String name;
 	private int defaultWager;
-	private boolean playing;
+	private boolean isPlaying;
+	private boolean isBlackjack;
 
 	public BlackJackPlayer() {
 		this.hand = new BlackJackHand();
@@ -82,12 +83,20 @@ public class BlackJackPlayer implements Player {
 		return this.getMoney() > 0;
 	}
 	
-	public void play(boolean isPlaying) {
-		this.playing = isPlaying;
+	public void playing(boolean isPlaying) {
+		this.isPlaying = isPlaying;
 	}
 	
-	public boolean isPlaying() {
-		return this.playing;
+	public boolean playing() {
+		return this.isPlaying;
+	}
+
+	public void blackjack(boolean isBlackjack) {
+		this.isBlackjack = isBlackjack;
+	}
+	
+	public boolean blackjack() {
+		return this.isBlackjack;
 	}
 
 	@Override

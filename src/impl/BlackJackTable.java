@@ -38,7 +38,7 @@ public class BlackJackTable extends Table {
 		for (Player p : this.getPlayers()) {
 			if (((BlackJackPlayer) p).hasMoney()) return false;
 		}
-		return false;
+		return true;
 	}
 
 	@Override
@@ -46,18 +46,21 @@ public class BlackJackTable extends Table {
 		// Blackjack table with players asdf, asdf, asdf
 		String result = "Blackjack table with players ";
 		for (Player p : this.getPlayers()) {
-			result += p.getName() + ", ";
+			if (((BlackJackPlayer) p).hasMoney()) {
+				result += p.getName() + ", ";	
+			}
 		}
 		return result.substring(0, result.length()-2);
 	}
 
 	@Override
 	protected void collectBets() {
-		wagers
+		wagers.clear(); // make sure wagers is empty
 		for (Player p : this.getPlayers()) {
+			((BlackJackPlayer) p).blackjack(false);
 			if (((BlackJackPlayer) p).hasMoney()) {
 				wagers.put(p, p.placeWager());
-				((BlackJackPlayer) p).play(true);
+				((BlackJackPlayer) p).playing(true);
 			}
 		}
 	}
@@ -65,20 +68,22 @@ public class BlackJackTable extends Table {
 	@Override
 	protected void dealTable() {
 		for (Player p : this.getPlayers()) {
-			if (((BlackJackPlayer) p).isPlaying()) {
+			if (((BlackJackPlayer) p).playing()) {
 				dealer.dealCard(p);
 				dealer.dealCard(p);
+				((BlackJackPlayer) p).blackjack(p.getHand().isWinner());
 			}
 		}
 		dealer.dealCard((BlackJackPlayer) dealer);
 		dealer.dealCard((BlackJackPlayer) dealer);
+		((BlackJackPlayer) dealer).blackjack(dealer.getHand().isWinner());
 	}
 
 
 	@Override
 	protected void playerTurns() {
 		for (Player p : this.getPlayers()) {
-			if (((BlackJackPlayer) p).isPlaying()) {
+			if (((BlackJackPlayer) p).playing()) {
 				while (p.requestCard()) {
 					dealer.dealCard(p);
 				}
@@ -91,23 +96,36 @@ public class BlackJackTable extends Table {
 
 	@Override
 	protected void playerEvaluations() {
-		Hand dealerHand = dealer.getHand();
+		Hand dHand = dealer.getHand();
 		for (Player p : this.getPlayers()) {
-			if (((BlackJackPlayer) p).isPlaying()) {
-				Hand playerHand = p.getHand();
-//				if (playerHand > dealerHand) 
+			if (((BlackJackPlayer) p).playing()) { // for each participating player
+				assert wagers.containsKey(p);
+				int bet = wagers.get(p);
+				double ratio = 0;
+				Hand pHand = p.getHand();
+				int handCompare = pHand.compareTo(dHand); 
+				if (	    ( pHand.isValid() && handCompare > 0 ) || //"Players win by not busting and having a total higher than the dealer,
+						( pHand.isValid() && !dHand.isValid() ) || //or not busting and having the dealer bust,
+						( pHand.isWinner() && !dHand.isWinner() ) || //or getting a blackjack without the dealer getting a blackjack." -Wikipedia
+						( ((BlackJackPlayer) p).blackjack() && !((BlackJackPlayer) dealer).blackjack() ) ) { //player is blackjack
+					ratio = (pHand.isWinner()) ? 1.0 + 1.5 : 1.0 + 1.0;
+				} else if (handCompare == 0) {
+					ratio = 1.0;
+				} else if ( !pHand.isValid() || handCompare < 0) {
+					ratio = 0.0;
+				}
+				p.payOut((int) (bet*ratio));
 			}
 		}
-		
 		wagers.clear();
 	}
 	
 	@Override
 	protected void collectCards() {
 		for (Player p : this.getPlayers()) {
-			if (((BlackJackPlayer) p).isPlaying()) {
+			if (((BlackJackPlayer) p).playing()) {
 				dealer.collectCards(p);
-				((BlackJackPlayer) p).play(false);
+				((BlackJackPlayer) p).playing(false);
 			}
 		}
 		dealer.collectCards((BlackJackPlayer) dealer);
