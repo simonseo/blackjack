@@ -4,11 +4,18 @@
 
 Update your Blackjack code to support strategies for betting and
 hitting; from an API perspective, this can also be thought of as
-placing a wager and requesting a card, respectively. This update should
+placing a wager andrequesting a card, respectively. This update should
 be done in a manner that is flexible to various betting and hitting
 strategies. To this end, updated projects should include code
 supporting an abstract framework, along with implementations of two
 betting and hitting strategies.
+
+There have been a number of changes to this repository; ideally, you
+should bring your current fork inline. See the official GitHub
+documentation regarding how to [sync a
+fork](https://help.github.com/articles/syncing-a-fork/). If this
+process is too complicated, have a look at CHANGELOG.md to see what
+you should manually update (or at least things that need attention).
 
 ### Branch and document (marks: 10/100)
 
@@ -42,12 +49,15 @@ four concrete implementations in the new package.
 
 Integration of the new strategies should come with minimal disruption:
 
-* Update `BlackJackPlayer`, `AnotherBlackJackPlayer`, and
-  `BlackJackDealer` to use compose-able strategies rather than the
-  static versions from the previous assignment. How those strategies
-  are provided to individual players is up to you. Players should,
-  however, be able to use a mix of strategies during the course of
-  gameplay if they choose.
+* Update `BlackJackPlayer`, and `BlackJackDealer` to use compose-able
+  strategies rather than the static versions from the previous
+  assignment. How those strategies are provided to individual players
+  is up to you. Players should, however, be able to use a mix of
+  strategies during the course of gameplay if they choose.
+
+* Notice that `AnotherBlackJackPlayer` is now redundant (why?). You
+  are free to do whatever you want with this file so long as the tests
+  still pass.
 
 * Add a constructor `BlackJackTable` that takes a collection of
   players (see the updated documentation in `api.Table` as to the
