@@ -5,10 +5,12 @@ import api.Hand;
 import api.Player;
 
 public class AnotherBlackJackPlayer implements Player {
-	Hand hand;
-	int wallet;
-	String name;
-	int defaultWager;
+	private Hand hand;
+	private int wallet;
+	private String name;
+	private int defaultWager;
+	private boolean isPlaying;
+	private boolean isBlackjack;
 
 	public AnotherBlackJackPlayer() {
 		this.hand = new BlackJackHand();
@@ -76,6 +78,26 @@ public class AnotherBlackJackPlayer implements Player {
 	public int getMoney() {
 		return this.wallet;
 	}
+	
+	public boolean hasMoney() {
+		return this.getMoney() > 0;
+	}
+	
+	public void playing(boolean isPlaying) {
+		this.isPlaying = isPlaying;
+	}
+	
+	public boolean playing() {
+		return this.isPlaying;
+	}
+
+	public void blackjack(boolean isBlackjack) {
+		this.isBlackjack = isBlackjack;
+	}
+	
+	public boolean blackjack() {
+		return this.isBlackjack;
+	}
 
 	@Override
 	public String getName() {
@@ -84,18 +106,23 @@ public class AnotherBlackJackPlayer implements Player {
 
 	@Override
 	public boolean requestCard() {
+		if (!this.getHand().isValid()) return false;
 		int value = this.getHand().valueOf();
 		switch (value) {
-		case 21:
-		case 20:
-		case 19:
-		case 18:
-			return false;
-		case 17:
-		case 16:
-			return ((BlackJackHand) this.getHand()).hasAce() ? true : false;
-		default:
-			return true;
+			case 21:
+			case 20:
+			case 19:
+			case 18:
+			case 17:
+			case 16:
+				return false;
+			case 15:
+			case 14:
+			case 13:
+			case 12:
+				return ((BlackJackHand) this.getHand()).hasAce() ? true : false;
+			default:
+				return true;
 		}
 	}
 

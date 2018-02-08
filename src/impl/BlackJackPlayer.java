@@ -93,6 +93,9 @@ public class BlackJackPlayer implements Player {
 
 	public void blackjack(boolean isBlackjack) {
 		this.isBlackjack = isBlackjack;
+		if (isBlackjack) {
+			System.out.println(this.getName() + " got a BLACKJACK!!!!!!!!!!!!!!");
+		}
 	}
 	
 	public boolean blackjack() {
@@ -111,9 +114,9 @@ public class BlackJackPlayer implements Player {
 		switch (value) {
 			case 21:
 			case 20:
+				return false;
 			case 19:
 			case 18:
-				return false;
 			case 17:
 			case 16:
 				return ((BlackJackHand) this.getHand()).hasAce() ? true : false;
