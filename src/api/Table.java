@@ -2,21 +2,21 @@ package api;
 
 import java.util.Map;
 import java.util.List;
+import java.util.Collection;
 
 /*
  * The table class represents a place in which card games happen. You
  * should specialise it specifically for Black Jack.
  *
- * Concrete implementations should have a single constructor that
- * takes two integers: the first representing the number of players,
- * the second representing the number of decks.
+ * Concrete implementations should have two constructors:
+ *
+ *  1. Takes two integers, where the first represents the number of
+ *     players and the second represents the number of decks.
+ *
+ *  2. Takes a collection of players and an integer representing the
+ *     number of decks.
  */
 public abstract class Table {
-    /*
-     * A list of players
-     */
-    protected List<Player> players;
-
     /*
      * The dealer
      */
@@ -26,6 +26,13 @@ public abstract class Table {
      * Keeps track of wagers made during a round
      */
     protected Map<Player, Integer> wagers;
+
+    /*
+     * Get the players list of players that are at this table. This
+     * list should not include the dealer. The data structure that is
+     * returned should be read-only.
+     */
+    public abstract Collection<Player> getPlayers();
 
     /*
      * A game is over when there are no players, or no players with
