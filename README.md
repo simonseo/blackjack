@@ -4,7 +4,7 @@
 
 Update your Blackjack code to support strategies for betting and
 hitting; from an API perspective, this can also be thought of as
-placing a wager andrequesting a card, respectively. This update should
+placing a wager and requesting a card, respectively. This update should
 be done in a manner that is flexible to various betting and hitting
 strategies. To this end, updated projects should include code
 supporting an abstract framework, along with implementations of two
