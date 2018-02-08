@@ -94,7 +94,7 @@ public class BlackJackPlayer implements Player {
 	public void blackjack(boolean isBlackjack) {
 		this.isBlackjack = isBlackjack;
 		if (isBlackjack) {
-			System.out.println(this.getName() + " got a BLACKJACK!!!!!!!!!!!!!!");
+			System.out.println(this.getName() + " got a BLACKJACK!!!!!!!!!!!!!! CONGRATS!!!");
 		}
 	}
 	

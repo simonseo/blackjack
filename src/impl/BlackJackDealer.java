@@ -8,55 +8,59 @@ import api.Card;
 import api.Card.Suit;
 import api.Card.Value;
 import api.Dealer;
+import api.Hand;
 import api.Player;
 
 public class BlackJackDealer extends BlackJackPlayer implements Dealer {
 	private List<Card> deck;
+	private int deckCount;
 	
 	public BlackJackDealer(int deckCount) {
-		super();
+		super("Dealer");
+		this.deckCount = deckCount;
+		this.deck = this.createDeck(deckCount);
+		this.shuffle();	
+	}
+	
+	private List<Card> createDeck(int deckCount) {
 		deck = new ArrayList<Card>();
 		for (int i = 0; i < deckCount; i++) {
 			for (Suit s : Card.Suit.values()) {
 				for (Value v : Card.Value.values()) {
-					deck.add(new Card(v, s));
+					this.deck.add(new Card(v, s));
 				}
 			}
 		}
-		this.shuffle();	
+		return deck;
 	}
 
 	@Override
 	public void dealCard(Player player) {
-		Card card = deck.remove(0);
-		player.receive(card); 	
+		Card card = this.deck.remove(0);
+		player.receive(card);
 	}
 
 	@Override
 	public void collectCards(Player player) {
-		List<Card> cards = player.relinquishCards().getCards();
-		this.deck.addAll(cards);
-		this.shuffle();
+		// we don't use the relinquished cards. 
+		// just throw it away to garbage collector and make a new deck if necessary
+		player.relinquishCards();
+		if (this.deck.size() < 0.50 * this.deckCount * 52) {
+			// create new deck if deck has 50% of cards left
+			System.out.println("Deck is not big enough, refilling deck.");
+			this.deck = this.createDeck(this.deckCount);
+			this.shuffle();
+		}
 	}
 
 	@Override
 	public void shuffle() {
-		Collections.shuffle(deck);
+		Collections.shuffle(this.deck);
 	}
 	
 	@Override
 	public boolean requestCard() {
-		if (!this.getHand().isValid()) return false;
-		int value = this.getHand().valueOf();
-		switch (value) {
-			case 21:
-			case 20:
-			case 19:
-			case 18:
-			case 17:
-				return false;
-			default:
-				return true;
-		}
+		Hand hand = this.getHand();
+		return (hand.isValid() && hand.valueOf() < 17) ? true : false;
 	}
 }

@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.logging.Logger;
 
 import api.Hand;
 import api.Player;
@@ -13,13 +13,21 @@ import api.Table;
 
 public class BlackJackTable extends Table {
 	private List<Player> players;
+	private int deckCount;
 
 	public BlackJackTable(int numberOfPlayers, int decks) {
-		wagers = new HashMap<Player, Integer>();
-		dealer = new BlackJackDealer(decks);
-		players = new ArrayList<Player>();
+		if (numberOfPlayers <= 0) {
+			Logger.getGlobal().info("Number of players is not positive");
+		}
+		if (decks <= 0) {
+			Logger.getGlobal().info("Number of decks is not positive");
+		}
+		this.wagers = new HashMap<Player, Integer>();
+		this.dealer = new BlackJackDealer(decks);
+		this.players = new ArrayList<Player>();
+		this.deckCount = decks;
 		for (int i = 0; i < numberOfPlayers; i++) {
-			players.add(new BlackJackPlayer("Player"+i));
+			this.players.add(new BlackJackPlayer("Player"+i));
 		}
 	}
 
@@ -43,8 +51,7 @@ public class BlackJackTable extends Table {
 
 	@Override
 	public String toString() {
-		// Blackjack table with players asdf, asdf, asdf
-		String result = "Blackjack table with players ";
+		String result = "Blackjack table with " + this.deckCount + " deck(s) and player(s)  ";
 		for (Player p : this.getPlayers()) {
 			if (((BlackJackPlayer) p).hasMoney()) {
 				result += p.getName() + ", ";	
@@ -57,8 +64,11 @@ public class BlackJackTable extends Table {
 	protected void collectBets() {
 		wagers.clear(); // make sure wagers is empty
 		for (Player p : this.getPlayers()) {
-			((BlackJackPlayer) p).blackjack(false);
-			if (((BlackJackPlayer) p).hasMoney()) {
+			//reset flag variable that checks if player has 'blackjack' ie. 21 on the first two cards
+			((BlackJackPlayer) p).blackjack(false); 
+		
+			// I'm trying to be nice and not kick out people with no money. I let them watch the game
+			if (((BlackJackPlayer) p).hasMoney()) { 
 				wagers.put(p, p.placeWager());
 				((BlackJackPlayer) p).playing(true);
 			}
@@ -88,6 +98,7 @@ public class BlackJackTable extends Table {
 					dealer.dealCard(p);
 				}
 			}
+			Logger.getGlobal().fine(p.getName() + " has $" + p.getMoney());
 		}
 		while (((BlackJackDealer) dealer).requestCard()) {
 			dealer.dealCard((Player) dealer);
@@ -109,10 +120,13 @@ public class BlackJackTable extends Table {
 						( pHand.isWinner() && !dHand.isWinner() ) || //or getting a blackjack without the dealer getting a blackjack." -Wikipedia
 						( ((BlackJackPlayer) p).blackjack() && !((BlackJackPlayer) dealer).blackjack() ) ) { //player is blackjack
 					ratio = (pHand.isWinner()) ? 1.0 + 1.5 : 1.0 + 1.0;
+					Logger.getGlobal().fine(p.getName() + " won.");
 				} else if (handCompare == 0) {
 					ratio = 1.0;
+					Logger.getGlobal().fine(p.getName() + " tied.");
 				} else if ( !pHand.isValid() || handCompare < 0) {
 					ratio = 0.0;
+					Logger.getGlobal().fine(p.getName() + " lost.");
 				}
 				p.payOut((int) (bet*ratio));
 			}
