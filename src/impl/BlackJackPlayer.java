@@ -76,6 +76,10 @@ public class BlackJackPlayer implements Player {
 	public int getMoney() {
 		return this.wallet;
 	}
+	
+	public boolean hasMoney() {
+		return this.getMoney() > 0;
+	}
 
 	@Override
 	public String getName() {
