@@ -1,13 +1,13 @@
 package impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import api.Card;
 import api.Card.Suit;
 import api.Card.Value;
 import api.Dealer;
-import api.Hand;
 import api.Player;
 
 public class BlackJackDealer extends BlackJackPlayer implements Dealer {
@@ -23,32 +23,24 @@ public class BlackJackDealer extends BlackJackPlayer implements Dealer {
 				}
 			}
 		}
-		this.shuffle();
-		
+		this.shuffle();	
 	}
 
 	@Override
 	public void dealCard(Player player) {
-		// TODO Auto-generated method stub
-		
+		Card card = deck.remove(0);
+		player.receive(card); 	
 	}
 
 	@Override
 	public void collectCards(Player player) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Hand getHand() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Card> cards = player.relinquishCards().getCards();
+		this.deck.addAll(cards);
+		this.shuffle();
 	}
 
 	@Override
 	public void shuffle() {
-		// TODO Auto-generated method stub
-		
+		Collections.shuffle(deck);
 	}
-		
 }
