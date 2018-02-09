@@ -112,7 +112,6 @@ RELEASE.md should contain:
   from a Blackjack perspective? What is the basis behind its decision?
 
 * How does one add a new betting or hitting strategy to your code?
->>>>>>> hw2
 
 ## Submission
 
