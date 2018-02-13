@@ -83,7 +83,7 @@ Create new system test that takes advantage of your new
 strategy. Specifically, fill in
 src/test/system/BlackJackStrategyGame.java such that
 
-1. it is creates players with different strategies,
+1. it creates players with different strategies,
 
 2. adds those players to a table,
 
