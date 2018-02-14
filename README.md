@@ -108,7 +108,7 @@ RELEASE.md should contain:
 
 * How was the strategy pattern used to do this?
 
-* For each concrete implementation, how does that implementation work
+* For each concrete implementation, explain how the strategy works
   from a Blackjack perspective? What is the basis behind its decision?
 
 * How does one add a new betting or hitting strategy to your code?
