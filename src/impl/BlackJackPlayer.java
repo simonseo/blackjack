@@ -3,20 +3,22 @@ package impl;
 import api.Card;
 import api.Hand;
 import api.Player;
+import strategy.BetRandomAmount;
+import strategy.BetStrategy;
 
 public class BlackJackPlayer implements Player {
 	private Hand hand;
 	private int wallet;
 	private String name;
-	private int defaultWager;
 	private boolean isPlaying;
 	private boolean isBlackjack;
+	private BetStrategy betStrategy;
 
 	public BlackJackPlayer() {
 		this.hand = new BlackJackHand();
 		this.wallet = 100;
 		this.name = "John Doe";
-		this.defaultWager = 5;
+		this.setBetStrategy(new BetRandomAmount());
 	}
 
 	public BlackJackPlayer(String name) {
@@ -29,6 +31,10 @@ public class BlackJackPlayer implements Player {
 		assert startingMoney >= 0;
 		this.wallet = startingMoney;
 		this.name = name;
+	}
+	
+	public void setBetStrategy(BetStrategy bs) {
+		this.betStrategy = bs;
 	}
 
 	@Override
@@ -62,7 +68,7 @@ public class BlackJackPlayer implements Player {
 	@Override
 	public int placeWager() {
 		assert this.getMoney() > 0;
-		int wager = Math.min(this.defaultWager, this.getMoney());
+		int wager = this.betStrategy.bet(this.getMoney());
 		assert wager > 0;
 		this.wallet -= wager;
 		assert this.getMoney() >= 0;
