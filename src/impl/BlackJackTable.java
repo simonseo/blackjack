@@ -12,7 +12,7 @@ import api.Player;
 import api.Table;
 
 public class BlackJackTable extends Table {
-	private List<Player> players;
+	private Collection<Player> players;
 	private int deckCount;
 
 	public BlackJackTable(int numberOfPlayers, int decks) {
@@ -30,10 +30,23 @@ public class BlackJackTable extends Table {
 			this.players.add(new BlackJackPlayer("Player"+i));
 		}
 	}
+	
+	public BlackJackTable(Collection<Player> players, int decks) {
+		if (players.size() <= 0) {
+			Logger.getGlobal().info("Number of players is not positive");
+		}
+		if (decks <= 0) {
+			Logger.getGlobal().info("Number of decks is not positive");
+		}
+		this.wagers = new HashMap<Player, Integer>();
+		this.dealer = new BlackJackDealer(decks);
+		this.players = players;
+		this.deckCount = decks;
+	}
 
 	@Override
 	public Collection<Player> getPlayers() {
-		List<Player> readonlyPlayers = Collections.unmodifiableList(this.players);
+		Collection<Player> readonlyPlayers = Collections.unmodifiableList((List<Player>) this.players);
 		return readonlyPlayers;
 	}
 
@@ -54,7 +67,7 @@ public class BlackJackTable extends Table {
 		String result = "Blackjack table with " + this.deckCount + " deck(s) and player(s)  ";
 		for (Player p : this.getPlayers()) {
 			if (((BlackJackPlayer) p).hasMoney()) {
-				result += p.getName() + ", ";	
+				result += p.toString() + ", ";	
 			}
 		}
 		return result.substring(0, result.length()-2);
@@ -68,7 +81,8 @@ public class BlackJackTable extends Table {
 			((BlackJackPlayer) p).blackjack(false); 
 		
 			// I'm trying to be nice and not kick out people with no money. I let them watch the game
-			if (((BlackJackPlayer) p).hasMoney()) { 
+			if (((BlackJackPlayer) p).hasMoney()) {
+				assert p.getMoney() > 0 : this.toString() + " should not be placing wagers";
 				wagers.put(p, p.placeWager());
 				((BlackJackPlayer) p).playing(true);
 			}

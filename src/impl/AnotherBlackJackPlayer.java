@@ -61,9 +61,8 @@ public class AnotherBlackJackPlayer implements Player {
 
 	@Override
 	public int placeWager() {
-		assert this.getMoney() > 0;
 		int wager = Math.min(this.defaultWager, this.getMoney());
-		assert wager > 0;
+		assert wager > 0 || this.getMoney() == 0;
 		this.wallet -= wager;
 		assert this.getMoney() >= 0;
 		return wager;

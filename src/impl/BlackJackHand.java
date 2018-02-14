@@ -54,7 +54,7 @@ public class	BlackJackHand implements Hand {
 			handValue += 10;
 			aceCount--;
 		}
-		assert handValue > 0;
+		assert this.getCards().size() == 0 || handValue > 0;
 		return handValue;
 	}
 	

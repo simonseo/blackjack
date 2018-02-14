@@ -3,8 +3,8 @@ package impl;
 import api.Card;
 import api.Hand;
 import api.Player;
-import strategy.BetRandomAmount;
 import strategy.BetStrategy;
+import strategy.BetUniformAmount;
 
 public class BlackJackPlayer implements Player {
 	private Hand hand;
@@ -18,7 +18,7 @@ public class BlackJackPlayer implements Player {
 		this.hand = new BlackJackHand();
 		this.wallet = 100;
 		this.name = "John Doe";
-		this.setBetStrategy(new BetRandomAmount());
+		this.setBetStrategy(new BetUniformAmount(5));
 	}
 
 	public BlackJackPlayer(String name) {
@@ -33,8 +33,9 @@ public class BlackJackPlayer implements Player {
 		this.name = name;
 	}
 	
-	public void setBetStrategy(BetStrategy bs) {
+	public Player setBetStrategy(BetStrategy bs) {
 		this.betStrategy = bs;
+		return this;
 	}
 
 	@Override
@@ -67,9 +68,8 @@ public class BlackJackPlayer implements Player {
 
 	@Override
 	public int placeWager() {
-		assert this.getMoney() > 0;
 		int wager = this.betStrategy.bet(this.getMoney());
-		assert wager > 0;
+		assert wager > 0 || this.getMoney() == 0;
 		this.wallet -= wager;
 		assert this.getMoney() >= 0;
 		return wager;
@@ -111,6 +111,11 @@ public class BlackJackPlayer implements Player {
 	@Override
 	public String getName() {
 		return this.name;
+	}
+	
+	@Override
+	public String toString() {
+		return this.name + " (" + this.getMoney() + ")";
 	}
 
 	@Override
