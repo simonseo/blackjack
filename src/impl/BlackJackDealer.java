@@ -7,19 +7,27 @@ import java.util.List;
 import api.Card;
 import api.Card.Suit;
 import api.Card.Value;
+import strategy.HitBlackJackDealer;
+import strategy.HitStrategy;
 import api.Dealer;
-import api.Hand;
 import api.Player;
 
 public class BlackJackDealer extends BlackJackPlayer implements Dealer {
 	private List<Card> deck;
 	private int deckCount;
+	private HitStrategy hitStrategy;
 	
 	public BlackJackDealer(int deckCount) {
 		super("Dealer");
 		this.deckCount = deckCount;
 		this.deck = this.createDeck(deckCount);
 		this.shuffle();	
+		this.setHitStrategy(new HitBlackJackDealer());
+	}
+	
+	public Player setHitStrategy(HitStrategy hs) {
+		this.hitStrategy = hs;
+		return this;
 	}
 	
 	private List<Card> createDeck(int deckCount) {
@@ -60,7 +68,6 @@ public class BlackJackDealer extends BlackJackPlayer implements Dealer {
 	
 	@Override
 	public boolean requestCard() {
-		Hand hand = this.getHand();
-		return (hand.isValid() && hand.valueOf() < 17) ? true : false;
+		return this.hitStrategy.hit(getMoney(), getHand());
 	}
 }

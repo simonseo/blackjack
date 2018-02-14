@@ -2,10 +2,10 @@ package strategy;
 
 import api.Hand;
 
-public class BetMadeByRichPerson implements BetStrategy {
+public class BetLikeRichPerson implements BetStrategy {
 	/*
 	 * (non-Javadoc)
-	 * Hypothetically some rich people bet all in every time.
+	 * Hypothetically some rich people bet all-in every time.
 	 * @see strategy.BetStrategy#bet(int)
 	 */
 

@@ -5,6 +5,8 @@ import api.Hand;
 import api.Player;
 import strategy.BetStrategy;
 import strategy.BetUniformAmount;
+import strategy.HitRisktakingBlackJackPlayer;
+import strategy.HitStrategy;
 
 public class BlackJackPlayer implements Player {
 	private Hand hand;
@@ -13,12 +15,14 @@ public class BlackJackPlayer implements Player {
 	private boolean isPlaying;
 	private boolean isBlackjack;
 	private BetStrategy betStrategy;
+	private HitStrategy hitStrategy;
 
 	public BlackJackPlayer() {
 		this.hand = new BlackJackHand();
 		this.wallet = 100;
 		this.name = "John Doe";
 		this.setBetStrategy(new BetUniformAmount(5));
+		this.setHitStrategy(new HitRisktakingBlackJackPlayer());
 	}
 
 	public BlackJackPlayer(String name) {
@@ -35,6 +39,11 @@ public class BlackJackPlayer implements Player {
 	
 	public Player setBetStrategy(BetStrategy bs) {
 		this.betStrategy = bs;
+		return this;
+	}
+	
+	public Player setHitStrategy(HitStrategy hs ) {
+		this.hitStrategy = hs;
 		return this;
 	}
 
@@ -120,20 +129,7 @@ public class BlackJackPlayer implements Player {
 
 	@Override
 	public boolean requestCard() {
-		if (!this.getHand().isValid()) return false;
-		int value = this.getHand().valueOf();
-		switch (value) {
-			case 21:
-			case 20:
-				return false;
-			case 19:
-			case 18:
-			case 17:
-			case 16:
-				return ((BlackJackHand) this.getHand()).hasAce() ? true : false;
-			default:
-				return true;
-		}
+		return this.hitStrategy.hit(getMoney(), getHand());
 	}
 
 	@Override

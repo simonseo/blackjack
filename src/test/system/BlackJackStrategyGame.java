@@ -6,10 +6,13 @@ import api.Player;
 import api.Table;
 import impl.BlackJackPlayer;
 import impl.BlackJackTable;
-import strategy.BetMadeByRichPerson;
-import strategy.BetRandomAmount;
 import strategy.BetStrategy;
+import strategy.BetLikeRichPerson;
+import strategy.BetRandomAmount;
 import strategy.BetUniformAmount;
+import strategy.HitStrategy;
+import strategy.HitCowardlyBlackJackPlayer;
+import strategy.HitRisktakingBlackJackPlayer;
 
 
 public class BlackJackStrategyGame {
@@ -26,15 +29,28 @@ public class BlackJackStrategyGame {
         
         for (int i = 0; i < numberOfPlayers; i++ ) {
         		BetStrategy bs = null;
+        		HitStrategy hs = null;
+        		
         		switch (i%3) {
         		case 0:
-        			bs = new BetMadeByRichPerson();
+        			bs = new BetLikeRichPerson();
         		case 1:
         			bs = new BetRandomAmount();
         		case 2:
         			bs = new BetUniformAmount(1+i*2);
         		}
-        		Player p = new BlackJackPlayer("Player"+i, 1+i*12).setBetStrategy(bs);
+        		
+        		
+        		switch (i%2) {
+        		case 0:
+        			hs = new HitRisktakingBlackJackPlayer();
+        		case 1:
+        			hs = new HitCowardlyBlackJackPlayer();
+        		}
+        		
+        		Player p = ((BlackJackPlayer) new BlackJackPlayer("Player"+i, 1+i*12)
+        				.setBetStrategy(bs))
+        				.setHitStrategy(hs);
         		players.add(p);
         }
         
