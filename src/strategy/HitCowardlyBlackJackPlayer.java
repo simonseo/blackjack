@@ -6,13 +6,16 @@ import impl.BlackJackHand;
 public class HitCowardlyBlackJackPlayer implements HitStrategy {
 	/*
 	 * (non-Javadoc)
+	 * Players with this hitting behaviour tries to die less.
+	 * CowardlyBlackJackPlayer becomes cowardly if balance is low.
+	 * The riskValue is evaluated high if player has low balance.
 	 * @see strategy.HitStrategy#hit(int, api.Hand)
 	 */
 	@Override
 	public boolean hit(int balance, Hand hand) {
 		if (!hand.isValid()) return false;
-		int value = hand.valueOf();
-		switch (value) {
+		int riskValue = hand.valueOf() - balance/10;
+		switch (riskValue) { 
 			case 21:
 			case 20:
 			case 19:
