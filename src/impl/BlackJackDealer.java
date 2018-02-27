@@ -24,7 +24,12 @@ public class BlackJackDealer extends BlackJackPlayer implements Dealer {
 		this.shuffle();	
 		this.setHitStrategy(new HitBlackJackDealer());
 	}
-
+	
+	public Player setHitStrategy(HitStrategy hs) {
+		this.hitStrategy = hs;
+		return this;
+	}
+	
 	private List<Card> createDeck(int deckCount) {
 		deck = new ArrayList<Card>();
 		for (int i = 0; i < deckCount; i++) {
